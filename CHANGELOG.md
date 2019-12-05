@@ -4,3 +4,4 @@
 
 - Initial commit
 - Line parsing
+- Line type parsing
