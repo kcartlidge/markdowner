@@ -6,7 +6,7 @@ namespace Markdowner.Services
 {
     internal static class MarkdownService
     {
-        public static void GetTokens(DocumentSource documentSource)
+        public static void GetTokens(MarkdownDocument documentSource)
         {
             foreach (var line in documentSource.CompressedSource)
             {

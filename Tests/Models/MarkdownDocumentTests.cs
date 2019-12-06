@@ -4,16 +4,16 @@ using NUnit.Framework;
 
 namespace Tests.Models
 {
-    public class DocumentSourceTests
+    public class MarkdownDocumentTests
     {
-        DocumentSource document;
+        MarkdownDocument document;
 
         [Test]
         [TestCase(null)]
         [TestCase("")]
         public void WithNoSource_HasEmptyLines(string source)
         {
-            document = new DocumentSource(source);
+            document = new MarkdownDocument(source);
 
             document.CompressedSource.Count.Should().Be(0);
         }
@@ -21,7 +21,7 @@ namespace Tests.Models
         [Test]
         public void WithWhitespaceSource_HasEmptyLines()
         {
-            document = new DocumentSource("  \t  \r  \t");
+            document = new MarkdownDocument("  \t  \r  \t");
 
             document.CompressedSource.Count.Should().Be(0);
         }
@@ -29,7 +29,7 @@ namespace Tests.Models
         [Test]
         public void RemovesLeadingEmptyLines()
         {
-            document = new DocumentSource("  \n  \n  \nHello.");
+            document = new MarkdownDocument("  \n  \n  \nHello.");
 
             document.CompressedSource.Count.Should().Be(1);
         }
@@ -37,7 +37,7 @@ namespace Tests.Models
         [Test]
         public void RemovesTrailingEmptyLines()
         {
-            document = new DocumentSource("Hello.\n\n \t\n");
+            document = new MarkdownDocument("Hello.\n\n \t\n");
 
             document.CompressedSource.Count.Should().Be(1);
         }
@@ -45,7 +45,7 @@ namespace Tests.Models
         [Test]
         public void CompressesRunsOfEmptyLines()
         {
-            document = new DocumentSource("One\n\n\nTwo\n\nThree");
+            document = new MarkdownDocument("One\n\n\nTwo\n\nThree");
 
             document.CompressedSource.Count.Should().Be(3);
         }
@@ -53,7 +53,7 @@ namespace Tests.Models
         [Test]
         public void JoinsRunsOfLinesWithoutEmptyLinesBetween()
         {
-            document = new DocumentSource("One\nTwo\nThree\n\nFour");
+            document = new MarkdownDocument("One\nTwo\nThree\n\nFour");
 
             document.CompressedSource.Count.Should().Be(2);
             document.CompressedSource[0].ToString().Should().Be("One Two Three");
@@ -63,7 +63,7 @@ namespace Tests.Models
         [Test]
         public void WithSomeEmptyLines_SetsCorrectLineNumbers()
         {
-            document = new DocumentSource("One\n\nTwo\n\n\nThree\nFour\n\nFive");
+            document = new MarkdownDocument("One\n\nTwo\n\n\nThree\nFour\n\nFive");
 
             document.CompressedSource.Count.Should().Be(4);
 

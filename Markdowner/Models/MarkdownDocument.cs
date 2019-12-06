@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Markdowner.Models
 {
-    public class DocumentSource
+    public class MarkdownDocument
     {
         private readonly char[] EOL = "\n".ToCharArray();
         private readonly char[] TRIM = " \t\r\n".ToCharArray();
@@ -21,13 +21,13 @@ namespace Markdowner.Models
         /// <summary>
         /// The complete definition of a loaded collection of source.
         /// </summary>
-        public DocumentSource(string source)
+        public MarkdownDocument(string text)
         {
             CompressedSource = new List<Line>();
-            if (source == null) return;
+            if (text == null) return;
 
             // Get separate lines (EOL) with no trailing whitespace (TRIM).
-            var lines = source.Split(EOL, StringSplitOptions.None);
+            var lines = text.Split(EOL, StringSplitOptions.None);
             var lastLineWasEmpty = true;
             var lineNum = 0;
             foreach (var line in lines)
