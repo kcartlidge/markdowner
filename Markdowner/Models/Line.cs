@@ -95,12 +95,28 @@ namespace Markdowner.Models
                                LineType becomesType,
                                Func<string, string> amendFunc)
         {
-            if (Text.ToString().StartsWith(prefix))
+            if (StartsWith(Text, prefix))
             {
                 LineType = becomesType;
                 Text = new StringBuilder(amendFunc(prefix));
                 Length = Text.Length;
             }
+        }
+
+        /// <summary>
+        /// Checks if the a StringBuilder's text starts with a given string.
+        /// Provided to avoid ToString on the StringBuilder (to access
+        /// StartsWith()) as that overhead is otherwise unnecessary.
+        /// </summary>
+        private bool StartsWith(StringBuilder content, string startText)
+        {
+            var contentLength = content.Length;
+            for (int i = 0; i < startText.Length; i++)
+            {
+                if (i >= contentLength) return false;
+                if (startText[i] != content[i]) return false;
+            }
+            return true;
         }
     }
 }
