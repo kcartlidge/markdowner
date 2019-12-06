@@ -2,7 +2,7 @@ using FluentAssertions;
 using Markdowner.Models;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests.Models
 {
     public class DocumentSourceTests
     {

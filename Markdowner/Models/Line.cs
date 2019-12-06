@@ -1,5 +1,6 @@
 using Markdowner.Enumerations;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Markdowner.Models
@@ -30,6 +31,8 @@ namespace Markdowner.Models
         /// The length of the line.
         /// </summary>
         public int Length { get; private set; }
+
+        public List<Token> Tokens { get; set; }
 
         /// <summary>
         /// The location and contents of a line of source.

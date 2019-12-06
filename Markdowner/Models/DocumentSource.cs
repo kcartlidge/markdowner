@@ -1,6 +1,6 @@
+using Markdowner.Services;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Markdowner.Models
 {
@@ -58,6 +58,8 @@ namespace Markdowner.Models
                 }
                 lastLineWasEmpty = false;
             }
+
+            MarkdownService.GetTokens(this);
         }
     }
 }

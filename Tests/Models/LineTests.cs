@@ -3,7 +3,7 @@ using Markdowner.Enumerations;
 using Markdowner.Models;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests.Models
 {
     public class LineTests
     {
