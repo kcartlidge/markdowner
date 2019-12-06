@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Markdowner;
+using Markdowner.Enumerations;
 using NUnit.Framework;
 
 namespace Tests
@@ -58,6 +59,20 @@ namespace Tests
             document.CompressedText.Count.Should().Be(2);
             document.CompressedText[0].ToString().Should().Be("One Two Three");
             document.CompressedText[1].ToString().Should().Be("Four");
+        }
+
+        [Test]
+        public void JoinsRunsOfLinesWithoutEmptyLinesBetween_UnlessLineTypeDiffers()
+        {
+            var document = parser.Parse("One\nTwo\n- Three\n\nFour");
+
+            document.CompressedText.Count.Should().Be(3);
+            document.CompressedText[0].ToString().Should().Be("One Two");
+            document.CompressedText[1].ToString().Should().Be("Three");
+            document.CompressedText[2].ToString().Should().Be("Four");
+            document.CompressedText[0].LineType.Should().Be(LineType.Paragraph);
+            document.CompressedText[1].LineType.Should().Be(LineType.UnorderedList);
+            document.CompressedText[2].LineType.Should().Be(LineType.Paragraph);
         }
 
         [Test]

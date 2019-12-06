@@ -1,3 +1,4 @@
+using Markdowner.Enumerations;
 using Markdowner.Models;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Markdowner.Services
             if (documentOut.text == null) return documentOut;
 
             // Get separate lines (EOL) with no trailing whitespace (TRIM).
+            var lineParser = new LineParser();
             var lines = documentOut.text.Split(EOL, StringSplitOptions.None);
             var lastLineWasEmpty = true;
             var lineNum = 0;
@@ -36,13 +38,16 @@ namespace Markdowner.Services
                     continue;
                 }
 
+                // Create a representative line and derive it's line type.
+                var newLine = new Line(lineNum, documentOut.CompressedText.Count + 1, trimmed);
+                lineParser.Parse(newLine);
+
                 // Only start a new line if there was a preceeding empty one.
                 // This compresses runs of lines into single paragraphs.
-                if (lastLineWasEmpty)
+                // However if the line type is not Paragraph it's new regardless.
+                if (lastLineWasEmpty || newLine.LineType != LineType.Paragraph)
                 {
-                    documentOut.CompressedText.Add(new Line(lineNum,
-                                                  documentOut.CompressedText.Count + 1,
-                                                  trimmed));
+                    documentOut.CompressedText.Add(newLine);
                 }
                 else
                 {
@@ -52,13 +57,6 @@ namespace Markdowner.Services
                         .Text.Append(trimmed);
                 }
                 lastLineWasEmpty = false;
-            }
-
-            // Parse the line types.
-            var lineParser = new LineParser();
-            foreach (var line in documentOut.CompressedText)
-            {
-                lineParser.Parse(line);
             }
 
             // Tokenise.
