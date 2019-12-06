@@ -5,16 +5,8 @@ using System.Linq;
 
 namespace Markdowner.Services
 {
-    public class Parser
+    internal class ContentParser
     {
-        private struct Formatting
-        {
-            public string On;
-            public string Off;
-            public TokenType TokenOn;
-            public TokenType TokenOff;
-        }
-
         private Formatting[] Formats = new Formatting[]
         {
             new Formatting{ On = "**", Off = "**", TokenOn = TokenType.BoldOn, TokenOff = TokenType.BoldOff },
@@ -23,14 +15,14 @@ namespace Markdowner.Services
             new Formatting{ On = "`", Off = "`", TokenOn = TokenType.CodeOn, TokenOff = TokenType.CodeOff },
         };
 
-        public List<Token> Parse(string text)
+        public List<Token> Parse(string textIn)
         {
-            var result = new List<Token> { };
+            var linesOut = new List<Token> { };
             var flags = new SortedList<string, bool>();
 
             // Populate tokens.
             var isContent = false;
-            for (int i = 0; i < text.Length; i++)
+            for (int i = 0; i < textIn.Length; i++)
             {
                 // Consume all the formats (nesting support handled elsewhere).
                 // Skip remains 0 if none were found.
@@ -38,7 +30,7 @@ namespace Markdowner.Services
                 foreach (var format in Formats)
                 {
                     var flag = flags.ContainsKey(format.On) && flags[format.On];
-                    skip = Consume(result, text, i, format.On, flag ? format.TokenOff : format.TokenOn);
+                    skip = Consume(linesOut, textIn, i, format.On, flag ? format.TokenOff : format.TokenOn);
                     if (skip > 0)
                     {
                         isContent = false;
@@ -51,22 +43,22 @@ namespace Markdowner.Services
 
                 // No skips, so we are dealing with content.
                 // Accumulate it, or start a new token if the last wasn't content.
-                var ch = text[i];
+                var ch = textIn[i];
                 if (isContent)
                 {
-                    result.Last().Text += ch;
+                    linesOut.Last().Text += ch;
                 }
                 else
                 {
                     isContent = true;
-                    result.Add(new Token { TokenType = TokenType.Normal, Offset = i, Text = ch.ToString() });
+                    linesOut.Add(new Token { TokenType = TokenType.Normal, Offset = i, Text = ch.ToString() });
                 }
             }
 
             // Close any still-open formats.
             //if (isBold) result.Add(new Token { TokenType = TokenType.BoldOff, Offset = text.Length, Text = "" });
 
-            return result;
+            return linesOut;
         }
 
         private int Consume(List<Token> result, string text, int idx, string marker, TokenType tokenType)

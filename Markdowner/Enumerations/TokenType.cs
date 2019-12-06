@@ -1,5 +1,8 @@
 namespace Markdowner.Enumerations
 {
+    /// <summary>
+    /// The supported Markdown formatting for inline styles.
+    /// </summary>
     public enum TokenType
     {
         Normal,

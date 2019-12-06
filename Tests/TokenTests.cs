@@ -1,29 +1,23 @@
 using FluentAssertions;
+using Markdowner;
 using Markdowner.Enumerations;
 using Markdowner.Models;
-using Markdowner.Services;
 using NUnit.Framework;
 using System.Collections.Generic;
 
 namespace Tests
 {
-    public class ParserTests
+    public class TokenTests
     {
-        Parser parser;
-
-        [SetUp]
-        public void Setup()
-        {
-            parser = new Parser();
-        }
+        IParser parser = new Parser();
 
         [Test]
         public void PlainText()
         {
             var text = "plain text";
-            var result = parser.Parse(text);
 
-            result.Should().BeEquivalentTo(new List<Token>
+            var document = parser.Parse(text);
+            document.CompressedText[0].Tokens.Should().BeEquivalentTo(new List<Token>
             {
                 new Token{ TokenType = TokenType.Normal, Text = text },
             });
@@ -34,9 +28,9 @@ namespace Tests
         {
             var text = "some **bold** text, and **yet more bold** text.";
             //         "01234567890123456789012345678901234567890123456";
-            var result = parser.Parse(text);
 
-            result.Should().BeEquivalentTo(new List<Token>
+            var document = parser.Parse(text);
+            document.CompressedText[0].Tokens.Should().BeEquivalentTo(new List<Token>
             {
                 new Token{Offset = 0, TokenType = TokenType.Normal, Text = "some " },
                 new Token{Offset = 5, TokenType = TokenType.BoldOn, Text = "**" },
@@ -55,9 +49,9 @@ namespace Tests
         {
             var text = "some *italic* text, and *yet more italic* text.";
             //         "01234567890123456789012345678901234567890123456";
-            var result = parser.Parse(text);
 
-            result.Should().BeEquivalentTo(new List<Token>
+            var document = parser.Parse(text);
+            document.CompressedText[0].Tokens.Should().BeEquivalentTo(new List<Token>
             {
                 new Token{Offset = 0, TokenType = TokenType.Normal, Text = "some " },
                 new Token{Offset = 5, TokenType = TokenType.ItalicOn, Text = "*" },
@@ -76,9 +70,9 @@ namespace Tests
         {
             var text = "some _underline_ text, and _yet more underline_ text.";
             //         "01234567890123456789012345678901234567890123456789012";
-            var result = parser.Parse(text);
 
-            result.Should().BeEquivalentTo(new List<Token>
+            var document = parser.Parse(text);
+            document.CompressedText[0].Tokens.Should().BeEquivalentTo(new List<Token>
             {
                 new Token{Offset = 0, TokenType = TokenType.Normal, Text = "some " },
                 new Token{Offset = 5, TokenType = TokenType.UnderlineOn, Text = "_" },
@@ -97,9 +91,9 @@ namespace Tests
         {
             var text = "some `code` text, and `yet more code` text.";
             //         "012345678901234567890123456789012345678901";
-            var result = parser.Parse(text);
 
-            result.Should().BeEquivalentTo(new List<Token>
+            var document = parser.Parse(text);
+            document.CompressedText[0].Tokens.Should().BeEquivalentTo(new List<Token>
             {
                 new Token{Offset = 0, TokenType = TokenType.Normal, Text = "some " },
                 new Token{Offset = 5, TokenType = TokenType.CodeOn, Text = "`" },
@@ -118,9 +112,9 @@ namespace Tests
         {
             var text = "We have **bold**, *italic*, _underline_, and `code`.";
             //         "0123456789012345678901234567890123456789012345678901";
-            var result = parser.Parse(text);
 
-            result.Should().BeEquivalentTo(new List<Token>
+            var document = parser.Parse(text);
+            document.CompressedText[0].Tokens.Should().BeEquivalentTo(new List<Token>
             {
                 new Token{Offset = 0, TokenType = TokenType.Normal, Text = "We have " },
                 new Token{Offset = 8, TokenType = TokenType.BoldOn, Text = "**" },
@@ -147,9 +141,9 @@ namespace Tests
         {
             var text = "We have **bold**, and then **more bold**.";
             //         "01234567890123456789012345678901234567890";
-            var result = parser.Parse(text);
 
-            result.Should().BeEquivalentTo(new List<Token>
+            var document = parser.Parse(text);
+            document.CompressedText[0].Tokens.Should().BeEquivalentTo(new List<Token>
             {
                 new Token{Offset = 0, TokenType = TokenType.Normal, Text = "We have " },
                 new Token{Offset = 8, TokenType = TokenType.BoldOn, Text = "**" },

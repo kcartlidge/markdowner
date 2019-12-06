@@ -1,28 +1,15 @@
 using FluentAssertions;
+using Markdowner;
 using Markdowner.Enumerations;
-using Markdowner.Models;
 using NUnit.Framework;
 
-namespace Tests.Models
+namespace Tests
 {
     public class LineTests
     {
-        [Test]
-        [TestCase(null, 0)]
-        [TestCase("", 0)]
-        [TestCase("   ", 0)]
-        [TestCase("12345  890", 10)]
-        [TestCase("   hello", 5)]
-        [TestCase("hello   ", 8)]
-        public void WithVariousText_HasCorrectLengths(string text, int length)
-        {
-            var line = new Line(1, 1, text);
-
-            line.Length.Should().Be(length);
-        }
+        IParser parser = new Parser();
 
         [Test]
-        [TestCase("", "", LineType.Empty)]
         [TestCase("#", "H1", LineType.Header1)]
         [TestCase("##", "H2", LineType.Header2)]
         [TestCase("###", "H3", LineType.Header3)]
@@ -36,17 +23,15 @@ namespace Tests.Models
         [TestCase("\t", "Quote", LineType.Quote)]
         [TestCase("```", "Pre", LineType.Pre)]
         [TestCase("---", "Rule", LineType.Rule)]
-        public void DetermineLineTypeInfo_SetsLineTypes(
+        public void WithContent_HasCorrectLineTypes_AndNormalisesText(
             string prefix,
             string text,
             LineType lineType)
         {
-            var content = $"{prefix} {text}".Trim(' ');
+            var document = parser.Parse($"{prefix} {text}".Trim(' '));
 
-            var line = new Line(1, 1, content);
-
-            line.LineType.Should().Be(lineType);
-            line.Text.ToString().Should().Be(text);
+            document.CompressedText[0].LineType.Should().Be(lineType);
+            document.CompressedText[0].Text.ToString().Should().Be(text);
         }
     }
 }
