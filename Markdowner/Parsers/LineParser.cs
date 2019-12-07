@@ -3,7 +3,7 @@ using Markdowner.Models;
 using System;
 using System.Text;
 
-namespace Markdowner.Services
+namespace Markdowner.Parsers
 {
     internal class LineParser
     {

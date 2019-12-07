@@ -3,7 +3,7 @@ using Markdowner.Models;
 using System;
 using System.Collections.Generic;
 
-namespace Markdowner.Services
+namespace Markdowner.Parsers
 {
     internal class DocumentParser
     {

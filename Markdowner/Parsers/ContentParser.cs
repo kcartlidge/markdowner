@@ -3,7 +3,7 @@ using Markdowner.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Markdowner.Services
+namespace Markdowner.Parsers
 {
     internal class ContentParser
     {
@@ -56,7 +56,13 @@ namespace Markdowner.Services
             }
 
             // Close any still-open formats.
-            //if (isBold) result.Add(new Token { TokenType = TokenType.BoldOff, Offset = text.Length, Text = "" });
+            foreach (var format in Formats)
+            {
+                if (flags.ContainsKey(format.On) && flags[format.On])
+                {
+                    linesOut.Add(new Token { TokenType = format.TokenOff, Offset = textIn.Length, Text = format.Off });
+                }
+            }
 
             return linesOut;
         }
