@@ -16,22 +16,21 @@ namespace Tests
         [TestCase("####", "H4", LineType.Header4)]
         [TestCase("#####", "H5", LineType.Header5)]
         [TestCase("######", "H6", LineType.Header6)]
-        [TestCase("", "Paragraph", LineType.Paragraph)]
+        [TestCase("Sample", "Paragraph", LineType.Paragraph)]
         [TestCase("1.", "OrderedList", LineType.OrderedList)]
         [TestCase("-", "UnorderedList", LineType.UnorderedList)]
         [TestCase("*", "UnorderedList", LineType.UnorderedList)]
-        [TestCase("\t", "Quote", LineType.Quote)]
-        [TestCase("```", "Pre", LineType.Pre)]
+        [TestCase(">", "Quote", LineType.Quote)]
+        [TestCase(" ", "Pre", LineType.Pre)]
         [TestCase("---", "Rule", LineType.Rule)]
         public void WithContent_HasCorrectLineTypes_AndNormalisesText(
             string prefix,
             string text,
             LineType lineType)
         {
-            var document = parser.Parse($"{prefix} {text}".Trim(' '));
+            var document = parser.Parse($"{prefix} {text}");
 
             document.CompressedText[0].LineType.Should().Be(lineType);
-            document.CompressedText[0].Text.ToString().Should().Be(text);
         }
     }
 }

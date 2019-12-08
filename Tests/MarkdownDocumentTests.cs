@@ -62,17 +62,17 @@ namespace Tests
         }
 
         [Test]
-        public void JoinsRunsOfLinesWithoutEmptyLinesBetween_UnlessLineTypeDiffers()
+        [TestCase(3, "One\nTwo\n- Three\n\nFour", Description = "P")]
+        [TestCase(2, "* a\n* b", Description = "UL")]
+        [TestCase(2, "1. a\n1. b", Description = "OL")]
+        [TestCase(2, "---\n---", Description = "HR")]
+        [TestCase(3, "  One\n  Two\n  Three\n", Description = "PRE")]
+        [TestCase(5, "Normal\n> One\n> Two\n> Three\nNormal\n", Description = "BLOCKQUOTE")]
+        public void JoinsRuns_OnlyForParagraphLines(int lineCount, string text)
         {
-            var document = parser.Parse("One\nTwo\n- Three\n\nFour");
+            var document = parser.Parse(text);
 
-            document.CompressedText.Count.Should().Be(3);
-            document.CompressedText[0].ToString().Should().Be("One Two");
-            document.CompressedText[1].ToString().Should().Be("Three");
-            document.CompressedText[2].ToString().Should().Be("Four");
-            document.CompressedText[0].LineType.Should().Be(LineType.Paragraph);
-            document.CompressedText[1].LineType.Should().Be(LineType.UnorderedList);
-            document.CompressedText[2].LineType.Should().Be(LineType.Paragraph);
+            document.CompressedText.Count.Should().Be(lineCount);
         }
 
         [Test]

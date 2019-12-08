@@ -26,9 +26,9 @@ namespace Markdowner.Parsers
                 CheckType("- ", LineType.UnorderedList, defaultAmender);
                 CheckType("* ", LineType.UnorderedList, defaultAmender);
                 CheckType("1. ", LineType.OrderedList, defaultAmender);
-                CheckType(" ", LineType.Quote, whitespaceAmender);
-                CheckType("\t", LineType.Quote, whitespaceAmender);
-                CheckType("```", LineType.Pre, runAmender);
+                CheckType(" ", LineType.Pre, whitespaceAmender);
+                CheckType("\t", LineType.Pre, whitespaceAmender);
+                CheckType("> ", LineType.Quote, defaultAmender);
                 CheckType("---", LineType.Rule, runAmender);
             }
         }

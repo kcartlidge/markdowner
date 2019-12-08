@@ -24,6 +24,7 @@ namespace Markdowner.Parsers
             var lineParser = new LineParser();
             var lines = documentOut.text.Split(EOL, StringSplitOptions.None);
             var lastLineWasEmpty = true;
+            var lastLineType = LineType.Empty;
             var lineNum = 0;
             foreach (var line in lines)
             {
@@ -35,6 +36,7 @@ namespace Markdowner.Parsers
                 {
                     if (lastLineWasEmpty) continue;
                     lastLineWasEmpty = true;
+                    lastLineType = LineType.Empty;
                     continue;
                 }
 
@@ -42,21 +44,32 @@ namespace Markdowner.Parsers
                 var newLine = new Line(lineNum, documentOut.CompressedText.Count + 1, trimmed);
                 lineParser.Parse(newLine);
 
-                // Only start a new line if there was a preceeding empty one.
-                // This compresses runs of lines into single paragraphs.
-                // However if the line type is not Paragraph it's new regardless.
-                if (lastLineWasEmpty || newLine.LineType != LineType.Paragraph)
+                // Compress paragraphs, unless:
+                // (a) the preceeding line was empty,
+                // (b) the preceeding line wasn't a paragraph.
+                if (newLine.LineType == LineType.Paragraph)
                 {
-                    documentOut.CompressedText.Add(newLine);
+                    if (lastLineWasEmpty || lastLineType != LineType.Paragraph)
+                    {
+                        documentOut.CompressedText.Add(newLine);
+                    }
+                    else
+                    {
+                        documentOut
+                            .CompressedText[documentOut.CompressedText.Count - 1]
+                            .Text.Append(" ");
+                        documentOut
+                            .CompressedText[documentOut.CompressedText.Count - 1]
+                            .Text.Append(trimmed);
+                    }
                 }
                 else
                 {
-                    documentOut.CompressedText[documentOut.CompressedText.Count - 1]
-                        .Text.Append(" ");
-                    documentOut.CompressedText[documentOut.CompressedText.Count - 1]
-                        .Text.Append(trimmed);
+                    documentOut.CompressedText.Add(newLine);
                 }
+
                 lastLineWasEmpty = false;
+                lastLineType = newLine.LineType;
             }
 
             // Tokenise and set multi-line block Start/Stop flags.
