@@ -59,11 +59,18 @@ namespace Markdowner.Parsers
                 lastLineWasEmpty = false;
             }
 
-            // Tokenise.
+            // Tokenise and set multi-line block Start/Stop flags.
             var contentParser = new ContentParser();
-            foreach (var line in documentOut.CompressedText)
+            var max = documentOut.CompressedText.Count;
+            for (int i = 0; i < max; i++)
             {
+                var line = documentOut.CompressedText[i];
                 line.Tokens = contentParser.Parse(line.Text.ToString());
+
+                var prevType = (i > 0 ? documentOut.CompressedText[i - 1].LineType : LineType.Empty);
+                var nextType = (i < (max - 1) ? documentOut.CompressedText[i + 1].LineType : LineType.Empty);
+                line.IsBlockStart = (line.LineType != prevType);
+                line.IsBlockEnd = (line.LineType != nextType);
             }
 
             return documentOut;

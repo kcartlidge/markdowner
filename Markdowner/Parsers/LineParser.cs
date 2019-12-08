@@ -9,6 +9,7 @@ namespace Markdowner.Parsers
     {
         Line lineOut;
 
+        /// <summary>Update the line with it's LineType.</summary>
         public void Parse(Line lineIn)
         {
             lineOut = lineIn;

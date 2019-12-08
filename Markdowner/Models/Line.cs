@@ -34,7 +34,17 @@ namespace Markdowner.Models
         /// <summary>
         /// The tokenised content, for use in output generation.
         /// </summary>
-        public List<Token> Tokens { get; set; }
+        public List<Token> Tokens { get; internal set; }
+
+        /// <summary>
+        /// Indicates this line is the start of a multi-line block (eg Quote).
+        /// </summary>
+        public bool IsBlockStart { get; internal set; }
+
+        /// <summary>
+        /// Indicates this line is the end of a multi-line block (eg Quote).
+        /// </summary>
+        public bool IsBlockEnd { get; internal set; }
 
         /// <summary>
         /// The location and contents of a line of source.

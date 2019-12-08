@@ -6,17 +6,20 @@ namespace Markdowner.Enumerations
     public enum LineType
     {
         Empty,
+
         Header1,
         Header2,
         Header3,
         Header4,
         Header5,
         Header6,
-        Paragraph,
+
         OrderedList,
         UnorderedList,
-        Quote,
         Pre,
+        Quote,
         Rule,
+
+        Paragraph,
     }
 }
