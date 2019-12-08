@@ -2,6 +2,11 @@
 
 Status: Alpha
 
+## v0.0.3 - 8th December 2019
+
+- Support ranges for quote, pre
+- Sample (HTML) output generation
+
 ## v0.0.2 - 6th December 2019
 
 - Non-nested format parsing
